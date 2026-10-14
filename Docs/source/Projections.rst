@@ -48,18 +48,19 @@ In contrast, solving incompressible or low Mach number systems
 typically involves a stage where one or more
 advection-like equations are solved (representing, e.g. conservation of mass and
 momentum), and coupling that advance with a divergence constraint on the velocity field.
-For example, the equations of invicid constant-density incompressible flow
+For example, the equations of inviscid constant-density incompressible flow
 are:
 
 .. math::
+   :label: eq:incompressible_u
 
-   \begin{aligned}
-   {{\bf U}}_t = & -{{\bf U}}\cdot \nabla {{\bf U}}- \frac{1}{\rho}\nabla p \label{eq:incompressible_u} \\
-   \nabla \cdot {{\bf U}} = &\  0 \end{aligned}
+   {{\bf U}}_t = -{{\bf U}}\cdot \nabla {{\bf U}}- \frac{1}{\rho}\nabla p
+
+.. math:: \nabla \cdot {{\bf U}} = 0
 
 Here, :math:`{{\bf U}}` represents the velocity vector
 and :math:`p` is the dynamical pressure. The time-evolution equation for
-the velocity (Eq. [eq:incompressible\_u]) can be solved using
+the velocity, Eq. :eq:`eq:incompressible_u`, can be solved using
 techniques similar to those developed for compressible hydrodynamics,
 updating the old velocity, :math:`{{\bf U}}^n`, to the new time-level, :math:`{{\bf U}}^\star`.
 Here the “:math:`^\star`” indicates that the updated velocity does not, in
@@ -69,11 +70,14 @@ equation. The basic idea follows from the fact that any vector
 field can be expressed as the sum of a divergence-free quantity and
 the gradient of a scalar. For the velocity, we can write:
 
-.. math:: {{\bf U}}^\star = {{\bf U}}^d + \nabla \phi \label{eq:decomposition}
+.. math::
+   :label: eq:decomposition
+
+   {{\bf U}}^\star = {{\bf U}}^d + \nabla \phi
 
 where :math:`{{\bf U}}^d` is the divergence free portion of the velocity vector,
 :math:`{{\bf U}}^\star`, and :math:`\phi` is a scalar. Taking the divergence of
-Eq. ([eq:decomposition]), we have
+Eq. :eq:`eq:decomposition`, we have
 
 .. math:: \nabla^2 \phi = \nabla \cdot {{\bf U}}^\star
 
@@ -122,70 +126,70 @@ Both Projector classes provide the following parameters, which can be set in an
 inputs file or on the command line. For the MacProjector, these must be preceded by
 "mac_proj.", or for the NodalProjector, "nodal_proj."
 
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-|                         |  Description                                                          |   Type      | Default        |
-+=========================+=======================================================================+=============+================+
-| verbose                 |  Verbosity of the linear solver                                       |    Int      |   0            |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-| bottom_verbose          |  Verbosity of the bottom solver                                       |    Int      |   0            |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-| maxiter                 |  Maximum number of iterations                                         |    Int      |  MAC: 200      |
-|                         |                                                                       |             |  Nodal: 100    |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-| bottom_maxiter          |  Maximum number of iterations in the bottom solver                    |    Int      |  MAC: 200      |
-|                         |  if using bicg, cg, bicgcg, cgbicg or hypre                           |             |  Nodal: 100    |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-| bottom_solver           |  Which bottom solver to use.                                          |  String     |  MAC: bicg     |
-|                         |  Options are bicg (BiCGStab), bicgcg, cg, cgbicg, smoother or hypre.  |             |  Nodal: bicgcg |
-|                         |  Any other value is silently ignored, and MLMG's default bottom       |             |                |
-|                         |  solver for the operator is used. hypre requires AMReX built with     |             |                |
-|                         |  HYPRE; without it the MacProjector aborts, while the NodalProjector  |             |                |
-|                         |  ignores it like any other unrecognized value.                        |             |                |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-| bottom_rtol             |  Relative tolerance of the bottom solver                              |   Real      |   1.0e-4       |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-| bottom_atol             |  Absolute tolerance of the bottom solver, a negative number means     |   Real      |   -1.0         |
-|                         |  it won't be used                                                     |             |                |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-| num_pre_smooth          |  Number of smoother iterations when going down the V-cycle            |    Int      |   2            |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-| num_post_smooth         |  Number of smoother iterations when going up the V-cycle              |    Int      |   2            |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-| num_final_smooth        |  Number of smoother iterations at the bottom of the V-cycle if        |    Int      |   8            |
-|                         |  bottom_solver = smoother, or after a bicg, cg, bicgcg or cgbicg      |             |                |
-|                         |  bottom solve that did not converge                                   |             |                |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-| use_gauss_seidel        |  Use Gauss-Seidel (true) or Jacobi (false) smoothing. The             |    Bool     |   true         |
-|                         |  MacProjector does not apply it to its EB operator (MLEBABecLap),     |             |                |
-|                         |  which is used when beta has EB data.                                 |             |                |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+|                         |  Description                                                          |   Type      | Default          |
++=========================+=======================================================================+=============+==================+
+| verbose                 |  Verbosity of the linear solver                                       |    Int      |   0              |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+| bottom_verbose          |  Verbosity of the bottom solver                                       |    Int      |   0              |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+| maxiter                 |  Maximum number of iterations                                         |    Int      | | MAC: 200       |
+|                         |                                                                       |             | | Nodal: 100     |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+| bottom_maxiter          |  Maximum number of iterations in the bottom solver                    |    Int      | | MAC: 200       |
+|                         |  if using bicg, cg, bicgcg, cgbicg or hypre                           |             | | Nodal: 100     |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+| bottom_solver           |  Which bottom solver to use.                                          |  String     | | MAC: bicg      |
+|                         |  Options are bicg (BiCGStab), bicgcg, cg, cgbicg, smoother or hypre.  |             | | Nodal: bicgcg  |
+|                         |  Any other value is silently ignored, and MLMG's default bottom       |             |                  |
+|                         |  solver for the operator is used. hypre requires AMReX built with     |             |                  |
+|                         |  HYPRE; without it the MacProjector aborts, while the NodalProjector  |             |                  |
+|                         |  ignores it like any other unrecognized value.                        |             |                  |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+| bottom_rtol             |  Relative tolerance of the bottom solver                              |   Real      |   1.0e-4         |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+| bottom_atol             |  Absolute tolerance of the bottom solver, a negative number means     |   Real      |   -1.0           |
+|                         |  it won't be used                                                     |             |                  |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+| num_pre_smooth          |  Number of smoother iterations when going down the V-cycle            |    Int      |   2              |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+| num_post_smooth         |  Number of smoother iterations when going up the V-cycle              |    Int      |   2              |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+| num_final_smooth        |  Number of smoother iterations at the bottom of the V-cycle if        |    Int      |   8              |
+|                         |  bottom_solver = smoother, or after a bicg, cg, bicgcg or cgbicg      |             |                  |
+|                         |  bottom solve that did not converge                                   |             |                  |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+| use_gauss_seidel        |  Use Gauss-Seidel (true) or Jacobi (false) smoothing. The             |    Bool     |   true           |
+|                         |  MacProjector does not apply it to its EB operator (MLEBABecLap),     |             |                  |
+|                         |  which is used when beta has EB data.                                 |             |                  |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
 
 The MacProjector additionally provides
 
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-|                         |  Description                                                          |   Type      | Default        |
-+=========================+=======================================================================+=============+================+
-| maxorder                |  Order of the linear operator's stencil at Dirichlet domain           |    Int      |   3            |
-|                         |  boundaries and coarse/fine boundaries (see AMReX's linear solver     |             |                |
-|                         |  documentation). Set to 3 if use_mlhypre is true.                     |             |                |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-| use_mlhypre             |  Solve the MAC projection with hypre (AMReX's HypreMLABecLap) instead |    Bool     |   false        |
-|                         |  of MLMG. Only read if AMReX is built with HYPRE, and ignored         |             |                |
-|                         |  otherwise. Aborts if beta has EB data, if an overset mask is given,  |             |                |
-|                         |  or if setLevelBC is called. Note that this is not the same as        |             |                |
-|                         |  bottom_solver = hypre, which uses hypre for the MLMG bottom solve    |             |                |
-|                         |  only.                                                                |             |                |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+|                         |  Description                                                          |   Type      | Default          |
++=========================+=======================================================================+=============+==================+
+| maxorder                |  Order of the linear operator's stencil at Dirichlet domain           |    Int      |   3              |
+|                         |  boundaries and coarse/fine boundaries (see AMReX's linear solver     |             |                  |
+|                         |  documentation). Set to 3 if use_mlhypre is true.                     |             |                  |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+| use_mlhypre             |  Solve the MAC projection with hypre (AMReX's HypreMLABecLap) instead |    Bool     |   false          |
+|                         |  of MLMG. Only read if AMReX is built with HYPRE, and ignored         |             |                  |
+|                         |  otherwise. Aborts if beta has EB data, if an overset mask is given,  |             |                  |
+|                         |  or if setLevelBC is called. Note that this is not the same as        |             |                  |
+|                         |  bottom_solver = hypre, which uses hypre for the MLMG bottom solve    |             |                  |
+|                         |  only.                                                                |             |                  |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
 
 The NodalProjector additionally provides
 
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
-|                         |  Description                                                          |   Type      | Default        |
-+=========================+=======================================================================+=============+================+
-| normalization_threshold |  Normalization threshold of the MLNodeLaplacian operator, which is    |   Real      |   -1.0         |
-|                         |  only used by the Krylov bottom solvers. It is passed to the operator |             |                |
-|                         |  only if it is positive; otherwise AMReX's default is used.           |             |                |
-+-------------------------+-----------------------------------------------------------------------+-------------+----------------+
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
+|                         |  Description                                                          |   Type      | Default          |
++=========================+=======================================================================+=============+==================+
+| normalization_threshold |  Normalization threshold of the MLNodeLaplacian operator, which is    |   Real      |   -1.0           |
+|                         |  only used by the Krylov bottom solvers. It is passed to the operator |             |                  |
+|                         |  only if it is positive; otherwise AMReX's default is used.           |             |                  |
++-------------------------+-----------------------------------------------------------------------+-------------+------------------+
 
 
 
@@ -238,7 +242,10 @@ in the solution array and have :math:`\phi` returned as well as :math:`U`.
 The MacProjector class defaults to homogeneous Dirichlet or Neumann boundary conditions at domain
 boundaries; for this case nothing further needs to be done.
 Non-homogeneous Dirichlet or Neumann boundary conditions at domain boundaries are set with
-member function ``void setLevelBC  (int amrlev, const amrex::MultiFab* levelbcdata)``.
+member function ``void setLevelBC (int amrlev, const amrex::MultiFab* levelbcdata,
+const amrex::MultiFab* robin_a = nullptr, const amrex::MultiFab* robin_b = nullptr,
+const amrex::MultiFab* robin_f = nullptr)``, whose optional arguments set the coefficients of
+Robin boundary conditions.
 
 If the MAC projection base level doesn't cover the full domain, one must pass boundary conditions
 that come from coarser data with member function
@@ -365,13 +372,13 @@ where :math:`U^*` is a vector field defined on cell centers and we want to satis
 The ``NodalProjector`` class can be used to solve the nodal projection without explicitly
 calling the linear solver. In addition to solving the nodal variable coefficient Poisson
 equation, it internally computes the right-hand-side,
-including the the divergence of the vector field, :math:`D(U^*)`,
+including the divergence of the vector field, :math:`D(U^*)`,
 and also subtracts the weighted gradient term to make the vector field result satisfy the
 divergence constraint.
 
 The NodalProjector class does not provide defaults for domain boundary conditions, and thus
-member function ``void setLevelBC  (int amrlev, const amrex::MultiFab* levelbcdata)``
-must always be called.
+member function ``void setDomainBC (std::array<amrex::LinOpBCType,AMREX_SPACEDIM> a_bc_lo,
+std::array<amrex::LinOpBCType,AMREX_SPACEDIM> a_bc_hi)`` must always be called before ``project``.
 
 The code below is taken from ``AMReX-Hydro/Tests/Nodal_Projection_EB/main.cpp``,
 and demonstrates how to set up the NodalProjector object and use it to perform a nodal projection.
@@ -384,7 +391,7 @@ and demonstrates how to set up the NodalProjector object and use it to perform a
       //
       // Given a cell-centered velocity (vel) field, a cell-centered
       // scalar field (sigma) field, and a source term S (either node-
-      // or cell-centered )solve:
+      // or cell-centered) solve:
       //
       //   div( sigma * grad(phi) ) = div(vel) - S
       //
