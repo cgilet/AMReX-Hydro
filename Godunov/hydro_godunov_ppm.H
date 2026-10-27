@@ -921,12 +921,16 @@ void PredictStateOnXFace ( const int i, const int j, const int k, const int n,
 
     if (vel_edge(i+1,j,k) > small_vel) {
         Ip = sp - (half*sigmap)*((sp - sm) - (one -two3rds*sigmap)*s6);
+    } else if (vel_edge(i+1,j,k) >= -small_vel) {
+        Ip = sp;
     } else {
         Ip = S(i,j,k,n);
     }
 
-    if(vel_edge(i,j,k) < -small_vel) {
+    if (vel_edge(i,j,k) < -small_vel) {
         Im = sm + (half*sigmam)*((sp-sm) + (one - two3rds*sigmam)*s6);
+    } else if (vel_edge(i,j,k) <= small_vel) {
+        Im = sm;
     } else {
         Im = S(i,j,k,n);
     }
@@ -979,12 +983,16 @@ void PredictStateOnXFace<PPM::minmod> ( const int i, const int j, const int k, c
 
     if (vel_edge(i + 1, j, k) > small_vel) {
         Ip = s0 + half * (one - sigmap) * dsp;
+    } else if (vel_edge(i + 1, j, k) >= -small_vel) {
+        Ip = s0 + half * dsp;
     } else {
         Ip = S(i,j,k,n);
     }
 
     if (vel_edge(i, j, k) < -small_vel) {
         Im = s0 - half * (one - sigmam) * dsm;
+    } else if (vel_edge(i, j, k) <= small_vel) {
+        Im = s0 - half * dsm;
     } else {
         Im = S(i,j,k,n);
     }
@@ -1038,12 +1046,16 @@ void PredictStateOnYFace ( const int i, const int j, const int k, const int n,
 
     if (vel_edge(i,j+1,k) > small_vel) {
         Ip = sp - (half*sigmap)*((sp - sm) - (one -two3rds*sigmap)*s6);
+    } else if (vel_edge(i,j+1,k) >= -small_vel) {
+        Ip = sp;
     } else {
         Ip = S(i,j,k,n);
     }
 
     if (vel_edge(i,j,k) < -small_vel) {
         Im = sm + (half*sigmam)*((sp-sm) + (one - two3rds*sigmam)*s6);
+    } else if (vel_edge(i,j,k) <= small_vel) {
+        Im = sm;
     } else {
         Im = S(i,j,k,n);
     }
@@ -1097,11 +1109,15 @@ void PredictStateOnYFace<PPM::minmod> ( const int i, const int j, const int k, c
 
     if (vel_edge(i,j+1,k) > small_vel) {
         Ip = s0 + half * (one - sigmap) * dsp;
+    } else if (vel_edge(i,j+1,k) >= -small_vel) {
+        Ip = s0 + half * dsp;
     } else {
         Ip = S(i,j,k,n);
     }
     if (vel_edge(i,j,k) < -small_vel) {
         Im = s0 - half * (one - sigmam) * dsm;
+    } else if (vel_edge(i,j,k) <= small_vel) {
+        Im = s0 - half * dsm;
     } else {
         Im = S(i,j,k,n);
     }
@@ -1154,14 +1170,18 @@ void PredictStateOnZFace ( const int i, const int j, const int k, const int n,
 
     const amrex::Real s6 = amrex::Real(6)*s0- amrex::Real(3)*(sm + sp);
 
-    if(vel_edge(i,j,k+1) > small_vel) {
+    if (vel_edge(i,j,k+1) > small_vel) {
         Ip = sp - (half*sigmap)*((sp-sm) - (amrex::Real(1.0) -two3rds*sigmap)*s6);
+    } else if (vel_edge(i,j,k+1) >= -small_vel) {
+        Ip = sp;
     } else {
         Ip = S(i,j,k,n);
     }
 
-    if(vel_edge(i,j,k) < -small_vel) {
+    if (vel_edge(i,j,k) < -small_vel) {
         Im = sm + (half*sigmam)*((sp-sm) + (amrex::Real(1.0) - two3rds*sigmam)*s6);
+    } else if (vel_edge(i,j,k) <= small_vel) {
+        Im = sm;
     } else {
         Im = S(i,j,k,n);
     }
@@ -1213,12 +1233,16 @@ void PredictStateOnZFace<PPM::minmod> ( const int i, const int j, const int k, c
 
     if (vel_edge(i, j, k + 1) > small_vel) {
         Ip = s0 + half * (one - sigmap) * dsp;
+    } else if (vel_edge(i, j, k + 1) >= -small_vel) {
+        Ip = s0 + half * dsp;
     } else {
         Ip = S(i,j,k,n);
     }
 
     if (vel_edge(i, j, k) < -small_vel) {
         Im = s0 - half * (one - sigmam) * dsm;
+    } else if (vel_edge(i, j, k) <= small_vel) {
+        Im = s0 - half * dsm;
     } else {
         Im = S(i,j,k,n);
     }
